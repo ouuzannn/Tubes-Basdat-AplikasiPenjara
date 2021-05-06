@@ -11,48 +11,60 @@ app.config['MYSQL_DB'] = "penjara"
 
 mysql = MySQL(app) 
 
-# @app.route('/',methods=['GET','POST'])
-# def index() :
-#         if request.method == 'POST' :
-#                 no_ktp = request.form['no_ktp']
-#                 NamaPengunjung = request.form["namaPengunjung"]
-#                 alamat = request.form["alamat"]
-#                 NoTahanan = request.form["NoTahanan"]
-#                 waktu = request.form["waktu"]
-
-#                 cur = mysql.connection.cursor()
-#                 cur.execute("SET FOREIGN_KEY_CHECKS=0")
-#                 cur.execute("INSERT INTO pengunjung (no_ktp,nama_pengunjung,alamat_pengunjung,no_tahanan) VALUES (%s,%s,%s,%s)",(no_ktp,NamaPengunjung,alamat,NoTahanan))
-#                 cur.execute("INSERT INTO kunjungan (no_ktp,no_tahanan,waktu) VALUES (%s,%s,%s)",(no_ktp,NoTahanan,waktu))
-#                 cur.execute("SET FOREIGN_KEY_CHECKS=1")
-
-#                 mysql.connection.commit()
-
-#                 cur.close()
-
-#                 return render_template("menu.html")
-#         return render_template('index.html')
-
-# @app.route('/',methods=['GET','POST'])
-# def pegawai() :
-#         if request.method == 'POST' :
-#                 ID_pegawai = request.form['ID_pegawai']
-#                 nama_pegawai = request.form["nama_pegawai"]
-#                 nama_lapas = request.form["nama_lapas"]
-
-#                 cur = mysql.connection.cursor()
-#                 cur.execute("SET FOREIGN_KEY_CHECKS=0")
-#                 cur.execute("INSERT INTO pegawai (ID_pegawai,nama_pegawai,nama_lapas) VALUES (%s,%s,%s)",(ID_pegawai,nama_pegawai,nama_lapas))
-#                 cur.execute("SET FOREIGN_KEY_CHECKS=1")
-
-#                 mysql.connection.commit()
-
-#                 cur.close()
-
-#                 return render_template("menu.html")
-#         return render_template('pegawai.html')
-
 @app.route('/',methods=['GET','POST'])
+def login() :
+        if request.method == 'POST' :
+                username = request.form['username']
+                password = request.form["password"]
+
+                if (username=="Kepala Lapas" and password=="Kepala_Lapas"):
+                        return redirect('/pegawai')
+                elif (username=="Pegawai" and password=="Pegawai"):
+                        return redirect('/napi')
+                elif (username=="Pengunjung" and password==""):
+                        return redirect('/kunjungan')
+                else:
+                        return render_template("login.html")
+        return render_template('login.html')
+
+@app.route('/kunjungan',methods=['GET','POST'])
+def kunjungan() :
+        if request.method == 'POST' :
+                no_ktp = request.form['no_ktp']
+                NamaPengunjung = request.form["namaPengunjung"]
+                alamat = request.form["alamat"]
+                NoTahanan = request.form["NoTahanan"]
+                waktu = request.form["waktu"]
+
+                cur = mysql.connection.cursor()
+                cur.execute("INSERT INTO pengunjung (no_ktp,nama_pengunjung,alamat_pengunjung,no_tahanan) VALUES (%s,%s,%s,%s)",(no_ktp,NamaPengunjung,alamat,NoTahanan))
+                cur.execute("INSERT INTO kunjungan (no_ktp,no_tahanan,waktu) VALUES (%s,%s,%s)",(no_ktp,NoTahanan,waktu))
+
+                mysql.connection.commit()
+
+                cur.close()
+
+                return render_template("menu.html")
+        return render_template('kunjungan.html')
+
+@app.route('/pegawai',methods=['GET','POST'])
+def pegawai() :
+        if request.method == 'POST' :
+                ID_pegawai = request.form['ID_pegawai']
+                nama_pegawai = request.form["nama_pegawai"]
+                nama_lapas = request.form["nama_lapas"]
+
+                cur = mysql.connection.cursor()
+                cur.execute("INSERT INTO pegawai (ID_pegawai,nama_pegawai,nama_lapas) VALUES (%s,%s,%s)",(ID_pegawai,nama_pegawai,nama_lapas))
+
+                mysql.connection.commit()
+
+                cur.close()
+
+                return render_template("menu.html")
+        return render_template('pegawai.html')
+
+@app.route('/napi',methods=['GET','POST'])
 def napi() :
         if request.method == 'POST' :
                 no_tahanan = request.form['no_tahanan']
@@ -64,9 +76,7 @@ def napi() :
                 no_ruangan = request.form['no_ruangan']
 
                 cur = mysql.connection.cursor()
-                cur.execute("SET FOREIGN_KEY_CHECKS=0")
                 cur.execute("INSERT INTO napi (no_tahanan,nama_tahanan,lama_penahanan,kasus,tahun_masuk,tahun_keluar,no_ruangan) VALUES (%s,%s,%s,%s,%s,%s,%s)",(no_tahanan,nama_tahanan,lama_penahanan,kasus,tahun_masuk,tahun_keluar,no_ruangan))
-                cur.execute("SET FOREIGN_KEY_CHECKS=1")
 
                 mysql.connection.commit()
 
