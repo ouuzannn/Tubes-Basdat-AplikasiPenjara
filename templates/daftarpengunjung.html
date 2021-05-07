@@ -1,0 +1,26 @@
+<HTML>
+    <BODY>
+    <table>
+     <thead>
+     <tr>
+      <th>No KTP</th>
+      <th>Nama</th>
+      <th>Alamat</th>
+      <th>No Tahanan</th>
+      <th>Waktu Kunjungan</th>
+     </tr>
+     </thead>
+     <tbody>
+      {% for row in value %}
+       <tr>
+        <td>{{row[0]}}</td>
+        <td>{{row[1]}}</td>
+        <td>{{row[2]}}</td>
+        <td>{{row[3]}}</td>
+        <td>{{row[4]}}</td>
+       </tr>
+      {% endfor %}
+     </tbody>
+    </table>
+    </BODY>
+    </HTML>
