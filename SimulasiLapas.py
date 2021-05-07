@@ -7,11 +7,11 @@ app = Flask(__name__)
 app.config['MYSQL_HOST'] = "localhost"
 app.config['MYSQL_USER'] = "root"
 app.config['MYSQL_PASSWORD'] = ""
-app.config['MYSQL_DB'] = "penjaralapasrev1"
+app.config['MYSQL_DB'] = "penjara"
 
 mysql = MySQL(app) 
 
-@app.route('/',methods=['GET','POST']) #route awal
+@app.route('/',methods=['GET','POST'])
 def login() :
         if request.method == 'POST' :
                 username = request.form['username']
@@ -22,12 +22,12 @@ def login() :
                 elif (username=="Pegawai" and password=="Pegawai"):
                         return redirect('/napi')
                 elif (username=="Pengunjung" and password==""):
-                        return redirect('/kunjungan') #diarahkan ke route kunjungan
+                        return redirect('/kunjungan')
                 else:
                         return render_template("login.html")
         return render_template('login.html')
 
-@app.route('/kunjungan',methods=['GET','POST']) #route kunjungan
+@app.route('/kunjungan',methods=['GET','POST'])
 def kunjungan() :
         if request.method == 'POST' :
                 no_ktp = request.form['no_ktp']
@@ -37,10 +37,8 @@ def kunjungan() :
                 waktu = request.form["waktu"]
 
                 cur = mysql.connection.cursor()
-
                 cur.execute("INSERT INTO pengunjung (no_ktp,nama_pengunjung,alamat_pengunjung,no_tahanan) VALUES (%s,%s,%s,%s)",(no_ktp,NamaPengunjung,alamat,NoTahanan))
                 cur.execute("INSERT INTO kunjungan (no_ktp,no_tahanan,waktu) VALUES (%s,%s,%s)",(no_ktp,NoTahanan,waktu))
-
 
                 mysql.connection.commit()
 
@@ -49,8 +47,7 @@ def kunjungan() :
                 return render_template("menu.html")
         return render_template('kunjungan.html')
 
-
-@app.route('/pegawai',methods=['GET','POST']) #route pegawai
+@app.route('/pegawai',methods=['GET','POST'])
 def pegawai() :
         if request.method == 'POST' :
                 ID_pegawai = request.form['ID_pegawai']
@@ -67,8 +64,7 @@ def pegawai() :
                 return render_template("menu.html")
         return render_template('pegawai.html')
 
-
-@app.route('/napi',methods=['GET','POST']) #route napi
+@app.route('/napi',methods=['GET','POST'])
 def napi() :
         if request.method == 'POST' :
                 no_tahanan = request.form['no_tahanan']
@@ -88,6 +84,13 @@ def napi() :
 
                 return render_template("menu.html")
         return render_template('napi.html')
+
+@app.route('/daftar_pengunjung')
+def gaji():
+        cur = mysql.connection.cursor()
+        cur.execute('''SELECT no_ktp, nama_pengunjung, alamat_pengunjung, no_tahanan, waktu FROM kunjungan NATURAL JOIN pengunjung''')
+        rv = cur.fetchall()
+        return render_template("daftarpengunjung.html",value=rv)
 
 if __name__ == "__main__" :
     app.run(debug=True)
