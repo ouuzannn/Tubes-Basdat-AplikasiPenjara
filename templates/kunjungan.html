@@ -1,25 +1,27 @@
 <h1>Form Pengisian Kunjungan Napi</h1>
 
 <form method="post" action="/kunjungan">
-    <label>Masukkan No ktp : </label>
-    <input type="text" name="no_ktp" required/>
-    <br>
-    <label>Masukkan nama : </label>
-    <input type="text" name="namaPengunjung" required/>
-    <br>
-    <label>Alamat Pengunjung : </label>
-    <input type="text" name="alamat" required/>
-    <br>
-    <label>No_tahanan</label>
-    <input type="number" name="NoTahanan" required/>
-    <br>
-    <label >waktu kunjungan</label>
-    <input type="date" name="waktu" required/>
-    <br>
+    <table>
+        <tr>
+            <td><label>Masukkan No ktp : </label></td>
+            <td><input type="text" name="no_ktp" required/></td>
+        </tr>
+        <tr>
+            <td><label>Masukkan nama : </label></td>
+            <td><input type="text" name="namaPengunjung" required/></td>
+        </tr>
+        <tr>
+            <td><label>Alamat Pengunjung : </label></td>
+            <td><input type="text" name="alamat" required/></td>
+        </tr>
+        <tr>
+            <td><label>No tahanan : </label></td>
+            <td><input type="number" name="NoTahanan" required/></td>
+        </tr>
+        <tr>
+            <td><label>Waktu kunjungan : </label></td>
+            <td><input type="date" name="waktu" required/></td>
+        </tr>
+    </table>
     <input type="submit"/>
 </form>
-
-
-
-
-
