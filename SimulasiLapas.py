@@ -19,6 +19,8 @@ mysql = MySQL(app)
 @app.route('/',methods=['GET','POST'])
 def login() :
         if request.method == 'POST' :
+                global username
+                global password
                 username = request.form['username']
                 password = request.form["password"]
 
@@ -83,12 +85,15 @@ def napi() :
                 tahun_keluar = request.form["tahun_keluar"]
                 no_ruangan = request.form['no_ruangan']
 
-                cur = mysql.connection.cursor()
-                cur.execute("INSERT INTO napi (no_tahanan,nama_tahanan,lama_penahanan,kasus,tahun_masuk,tahun_keluar,no_ruangan) VALUES (%s,%s,%s,%s,%s,%s,%s)",(no_tahanan,nama_tahanan,lama_penahanan,kasus,tahun_masuk,tahun_keluar,no_ruangan))
+                try :
+                        cur = mysql.connection.cursor()
+                        cur.execute("INSERT INTO napi (no_tahanan,nama_tahanan,lama_penahanan,kasus,tahun_masuk,tahun_keluar,no_ruangan) VALUES (%s,%s,%s,%s,%s,%s,%s)",(no_tahanan,nama_tahanan,lama_penahanan,kasus,tahun_masuk,tahun_keluar,no_ruangan))
 
-                mysql.connection.commit()
+                        mysql.connection.commit()
 
-                cur.close()
+                        cur.close()
+                except :
+                        return redirect('napi')
 
                 return render_template("menu.html")
         return render_template('napi.html')
@@ -103,12 +108,34 @@ def gaji():
 
 @app.route('/OpsiKP',methods=['GET','POST'])
 def OpsiKP():
-        return render_template("OpsiKP.html")
+        try : 
+                if username == 'Kepala Lapas' :
+                        return render_template("OpsiKP.html")
+        except :
+                return redirect('/')
 
 #Untuk Hapus Tahanan
-@app.route('/HapusTahanan')
+@app.route('/HapusTahanan',methods=['GET','POST'])
 def HapusTahanan():
+        if request.method== 'POST':
+                IdNapi = request.form['id_napi']
+                cur=mysql.connection.cursor()
+                cur.execute(f"SELECT no_tahanan,nama_tahanan,lama_penahanan,kasus,no_ruangan,nama_lapas FROM napi NATURAL JOIN cabang_lapas where napi.no_tahanan='{IdNapi}'")
+                identitas_napi = cur.fetchall()
+                return render_template('KonfirmasiHapus.html',identitas=identitas_napi,idnapi=IdNapi)
         return render_template("HapusTahanan.html")
+
+@app.route('/KerjaHapus/<int:id>',methods=['GET','POST'])
+def KonfirmasiHapusTahanan(id) :
+        # if method.request=='POST' :
+        #         return redirect('OpsiKP')
+        cur=mysql.connection.cursor()
+        cur.execute(f"DELETE FROM napi WHERE napi.no_tahanan={id}")
+        cur.execute(f"DELETE FROM kunjungan WHERE kunjungan.no_tahanan={id}")
+        mysql.connection.commit()
+
+        cur.close()
+        return render_template('KembaliOpsiKP.html')
 
 if __name__ == "__main__" :
     app.run(debug=True)
