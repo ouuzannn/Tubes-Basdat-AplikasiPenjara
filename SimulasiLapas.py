@@ -7,11 +7,11 @@ app = Flask(__name__)
 app.config['MYSQL_HOST'] = "localhost"
 app.config['MYSQL_USER'] = "root"
 app.config['MYSQL_PASSWORD'] = ""
-#DB dari DODO
-app.config['MYSQL_DB'] = "penjara"
+# #DB dari DODO
+# app.config['MYSQL_DB'] = "penjara"
 
-# #DB dari ozan
-# app.config['MYSQL_DB'] = "penjaralapasrev1"
+#DB dari ozan
+app.config['MYSQL_DB'] = "penjaralapasrev1"
 
 mysql = MySQL(app) 
 
@@ -29,10 +29,15 @@ def login() :
                 elif (username=="Pegawai" and password=="Pegawai"):
                         return redirect('/OpsiPegawai')
                 elif (username=="Pengunjung" and password=="Pengunjung"):
-                        return redirect('/kunjungan')
+                        return redirect('/OpsiPengunjung')
                 else:
                         return render_template("login.html")
         return render_template('login.html')
+
+@app.route('/OpsiPengunjung')
+def OpsiPengunjung():
+        return render_template('OpsiPengunjung.html')
+
 
 #Input Pengunjung Jika mau berkunjung ke apas (melihat tahanan)
 @app.route('/kunjungan',methods=['GET','POST'])
@@ -161,6 +166,16 @@ def OpsiPegawai():
                         return render_template("OpsiPegawai.html")
         except :
                 return redirect('/')
+
+@app.route('/TampilTahanan',methods=['GET','POST'])
+def TampilTahanan():
+        if request.method == 'POST' :
+                idnapi = request.form["NoTahanan"]
+                cur = mysql.connection.cursor()
+                cur.execute(f"SELECT no_tahanan,nama_tahanan,no_ruangan FROM napi where napi.no_tahanan='{idnapi}' AND no_ruangan IN (select no_ruangan from ruang_lapas)")
+                infotahanan = cur.fetchall()
+                return render_template('InfoTahanan.html',infotahanan=infotahanan)
+        return render_template('CariInfoTahanan.html')
 
 if __name__ == "__main__" :
     app.run(debug=True)
