@@ -11,7 +11,7 @@ app.config['MYSQL_PASSWORD'] = ""
 # app.config['MYSQL_DB'] = "penjara"
 
 #DB dari ozan
-app.config['MYSQL_DB'] = "penjaralapasrev1"
+app.config['MYSQL_DB'] = "penjaralapasrev2"
 
 mysql = MySQL(app) 
 
@@ -176,6 +176,37 @@ def TampilTahanan():
                 infotahanan = cur.fetchall()
                 return render_template('InfoTahanan.html',infotahanan=infotahanan)
         return render_template('CariInfoTahanan.html')
+
+@app.route('/TampilUsulanRemisi')
+def NotifUsulanRemisi():
+        cur =  mysql.connection.cursor()
+        cur.execute(f'SELECT * from usulanremisi')
+        InfoRemisi = cur.fetchall()
+        return render_template('TampilRemisi.html',InfoRemisi=InfoRemisi)
+
+
+@app.route('/SetujuRemisi/<int:id>')
+def SetujuRemisi():
+        cur = mysql.connection.cursor()
+        cur.execute(f'DELETE FROM usulanremisi WHERE usulanremisi.no_tahanan={id}')
+        cur.execute(f'UPDATE FROM napi SET ')
+        mysql.connection.commit()
+
+        cur.close()
+
+        return redirect('/TampilUsulanRemisi')
+
+@app.route('/NotRemisi/<int:id>')
+def NotRemisi():
+        cur = mysql.connection.cursor()
+        cur.execute(f'DELETE FROM usulanremisi WHERE usulanremisi.no_tahanan={id}')
+        mysql.connection.commit()
+
+        cur.close()
+
+        return redirect('/TampilUsulanRemisi')
+
+
 
 if __name__ == "__main__" :
     app.run(debug=True)

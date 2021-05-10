@@ -1,0 +1,35 @@
+<h1>TABEL USULAN REMISI</h1>
+<table border="4">
+    <thead>
+        <tr>
+            <th>Nomor Tahanan</th>
+            <th>Nama Tahanan</th>
+            <th>alasan </th>
+            <th>Setuju</th>
+            <th>Tidak</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for usulan in InfoRemisi %}
+        <tr>
+            <td>{{usulan[0]}}</td>
+            <td>{{usulan[1]}}</td>
+            <td>{{usulan[2]}}</td>
+            <td>
+                <a href="/SetujuRemisi/{{usulan[0]}}">
+                    SETUJU
+                </a>
+            </td>
+            <td>
+                <a href="/NotRemisi/{{usulan[o]}}">
+                    TIDAK
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+
+
+
