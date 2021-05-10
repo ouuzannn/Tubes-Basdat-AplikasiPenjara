@@ -8,10 +8,10 @@ app.config['MYSQL_HOST'] = "localhost"
 app.config['MYSQL_USER'] = "root"
 app.config['MYSQL_PASSWORD'] = ""
 #DB dari DODO
-#app.config['MYSQL_DB'] = "penjara"
+app.config['MYSQL_DB'] = "penjara"
 
-#DB dari ozan
-app.config['MYSQL_DB'] = "penjaralapasrev1"
+# #DB dari ozan
+# app.config['MYSQL_DB'] = "penjaralapasrev1"
 
 mysql = MySQL(app) 
 
@@ -27,8 +27,8 @@ def login() :
                 if (username=="Kepala Lapas" and password=="Kepala_Lapas"):
                         return redirect('/OpsiKP') #Masuk dulu dia mau input pegawai baru apa hapus tahanan
                 elif (username=="Pegawai" and password=="Pegawai"):
-                        return redirect('/napi')
-                elif (username=="Pengunjung" and password==""):
+                        return redirect('/OpsiPegawai')
+                elif (username=="Pengunjung" and password=="Pengunjung"):
                         return redirect('/kunjungan')
                 else:
                         return render_template("login.html")
@@ -100,9 +100,9 @@ def napi() :
 
 #Untuk meilhat list kunjungan
 @app.route('/daftar_pengunjung')
-def gaji():
+def daftarpengunjung():
         cur = mysql.connection.cursor()
-        cur.execute('''SELECT no_ktp, nama_pengunjung, alamat_pengunjung, no_tahanan, waktu FROM kunjungan NATURAL JOIN pengunjung''')
+        cur.execute('''SELECT no_ktp, nama_pengunjung, alamat_pengunjung, no_tahanan, waktu, no_ruangan, kelas FROM kunjungan NATURAL JOIN pengunjung NATURAL JOIN ruang_lapas''')
         rv = cur.fetchall()
         return render_template("daftarpengunjung.html",value=rv)
 
@@ -136,6 +136,31 @@ def KonfirmasiHapusTahanan(id) :
 
         cur.close()
         return render_template('KembaliOpsiKP.html')
+
+@app.route('/UsulanRemisi',methods=['GET','POST'])
+def UsulanRemisi() :
+        if request.method == 'POST' :
+                no_tahanan = request.form['no_tahanan']
+                nama_tahanan = request.form["nama_tahanan"]
+                alasan = request.form["alasan"]
+
+                cur = mysql.connection.cursor()
+                cur.execute("INSERT INTO pegawai (no_tahanan,nama_tahanan,alasan) VALUES (%s,%s,%s)",(no_tahanan,nama_tahanan,alasan))
+
+                mysql.connection.commit()
+
+                cur.close()
+
+                return render_template("menu.html")
+        return render_template('UsulanRemisi.html')
+
+@app.route('/OpsiPegawai',methods=['GET','POST'])
+def OpsiPegawai():
+        try : 
+                if username == 'Pegawai' :
+                        return render_template("OpsiPegawai.html")
+        except :
+                return redirect('/')
 
 if __name__ == "__main__" :
     app.run(debug=True)
