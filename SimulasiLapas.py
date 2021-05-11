@@ -8,10 +8,10 @@ app.config['MYSQL_HOST'] = "localhost"
 app.config['MYSQL_USER'] = "root"
 app.config['MYSQL_PASSWORD'] = ""
 # #DB dari DODO
-# app.config['MYSQL_DB'] = "penjara"
+app.config['MYSQL_DB'] = "penjara"
 
 #DB dari ozan
-app.config['MYSQL_DB'] = "penjaralapasrev2"
+# app.config['MYSQL_DB'] = "penjaralapasrev2"
 
 mysql = MySQL(app) 
 
@@ -213,7 +213,37 @@ def NotRemisi(id):
 
         return render_template('TampilRemisi.html')
 
+@app.route('/diagram')
+def diagram():
+        return render_template("diagram.html")
 
+@app.route('/column')
+def column():
+        cur = mysql.connection.cursor()
+        cur.execute(f'SELECT * from ruang_lapas')
+        Infodiagram = cur.fetchall()
+        return render_template("column.php",Infodiagram=Infodiagram)
 
+@app.route('/line')
+def line():
+        cur = mysql.connection.cursor()
+        cur.execute(f'SELECT * from ruang_lapas')
+        Infodiagram = cur.fetchall()
+        return render_template("line.php",Infodiagram=Infodiagram)
+
+@app.route('/pie')
+def pie():
+        cur = mysql.connection.cursor()
+        cur.execute(f'SELECT * from ruang_lapas')
+        Infodiagram = cur.fetchall()
+        return render_template("pie.php",Infodiagram=Infodiagram)
+
+@app.route('/donat')
+def donat():
+        cur = mysql.connection.cursor()
+        cur.execute(f'SELECT * from ruang_lapas')
+        Infodiagram = cur.fetchall()
+        return render_template("donat.php",Infodiagram=Infodiagram)
+        
 if __name__ == "__main__" :
     app.run(debug=True)
