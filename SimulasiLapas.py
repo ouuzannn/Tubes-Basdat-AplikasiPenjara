@@ -144,19 +144,25 @@ def KonfirmasiHapusTahanan(id) :
 
 @app.route('/UsulanRemisi',methods=['GET','POST'])
 def UsulanRemisi() :
+        
         if request.method == 'POST' :
-                no_tahanan = request.form['no_tahanan']
-                nama_tahanan = request.form["nama_tahanan"]
-                alasan = request.form["alasan"]
+                try :
+                        no_tahanan = request.form['no_tahanan']
+                        pengurangan = request.form["pengurangan"]
+                        tmasuk = request.form["tmasuk"]
+                        tkeluar = request.form["tkeluar"]
+                        alasan = request.form["alasan"]
 
-                cur = mysql.connection.cursor()
-                cur.execute("INSERT INTO pegawai (no_tahanan,nama_tahanan,alasan) VALUES (%s,%s,%s)",(no_tahanan,nama_tahanan,alasan))
+                        cur = mysql.connection.cursor()
+                        cur.execute(f'INSERT INTO usulanremisi VALUES("{no_tahanan}","{pengurangan}","{tmasuk}","{tkeluar}","{alasan}")')
 
-                mysql.connection.commit()
+                        mysql.connection.commit()
 
-                cur.close()
+                        cur.close()
 
-                return render_template("menu.html")
+                        return redirect("/OpsiPegawai")
+                except :
+                        return render_template('UsulanRemisi.html')
         return render_template('UsulanRemisi.html')
 
 @app.route('/OpsiPegawai',methods=['GET','POST'])
@@ -186,25 +192,26 @@ def NotifUsulanRemisi():
 
 
 @app.route('/SetujuRemisi/<int:id>')
-def SetujuRemisi():
+def SetujuRemisi(id):
         cur = mysql.connection.cursor()
-        cur.execute(f'DELETE FROM usulanremisi WHERE usulanremisi.no_tahanan={id}')
-        cur.execute(f'UPDATE FROM napi SET ')
+        cur.execute(f'DELETE FROM usulanremisi WHERE usulanremisi.no_tahanan="{id}"')
+        cur.execute(f'UPDATE napi SET napi.tahun_keluar=(select tahun_keluar FROM napi WHERE napi.no_tahanan="{id}")-2 WHERE naPI.no_tahanan="{id}"')
         mysql.connection.commit()
 
         cur.close()
 
         return redirect('/TampilUsulanRemisi')
 
-@app.route('/NotRemisi/<int:id>')
-def NotRemisi():
+@app.route('/NotRemisi/<int:id>',methods=['GET','POST'])
+def NotRemisi(id):
+        
         cur = mysql.connection.cursor()
         cur.execute(f'DELETE FROM usulanremisi WHERE usulanremisi.no_tahanan={id}')
         mysql.connection.commit()
 
         cur.close()
 
-        return redirect('/TampilUsulanRemisi')
+        return render_template('TampilRemisi.html')
 
 
 
