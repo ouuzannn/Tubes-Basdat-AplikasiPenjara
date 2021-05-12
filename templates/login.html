@@ -1,0 +1,43 @@
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/custom.css')}}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css')}}">
+<img src="{{ url_for('static',filename='img/atas.png')}}"/>
+<style type="text/css">
+    .login{
+        display: grid;
+		text-align: center;
+		vertical-align: middle;
+		border:2px solid rgba(0,0,0,.2);
+        margin-left: 13cm;
+        width: 7cm;
+    }
+    .kiri{
+        margin-top: -4.5cm;
+        background-color: blue;
+        width: 5cm;
+        height: 10cm;
+        text-align: center;
+        padding-top: 3cm;
+    }
+</style>
+<a href="/daftar_pengunjung">Daftar Pengunjung</a>
+<br>
+<a href="/diagram">Lihat Diagram</a>
+<br> 
+<div class="login">
+    <h1>LOGIN</h1>
+    <form method="POST" action="/">
+        <table>
+            <tr>
+                <td><label>Usernama : </label></td>
+                <td><input type="text" name="username" required/></td>
+            </tr>
+            <tr>
+                <td><label>Password : </label></td>
+                <td><input type="password" name="password" required/></td>
+            </tr>
+            <tr>
+                <td><input type="submit"/></td>
+            </tr>
+        </table>  
+    </form>
+</div> 

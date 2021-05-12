@@ -1,0 +1,50 @@
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/custom.css')}}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css')}}">
+<img src="{{ url_for('static',filename='img/atas.png')}}"/>
+<style type="text/css">
+    h1{
+        margin-left: 15cm;
+    }
+    .data{
+        margin-left: 7cm;
+    }
+</style>
+<h1>TABEL USULAN REMISI</h1>
+<div class="data">
+<table border="4">
+    <thead>
+        <tr>
+            <th>Nomor Tahanan</th>
+            <th>Nama Tahanan</th>
+            <th>Lama Pengurangan</th>
+            <th>Tahun Masuk</th>
+            <th>Tahun Keluar</th>
+            <th>alasan </th>
+            <th>Setuju</th>
+            <th>Tidak</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for usulan in InfoRemisi %}
+        <tr>
+            <td>{{usulan[0]}}</td>
+            <td>{{usulan[1]}}</td>
+            <td>{{usulan[2]}}</td>
+            <td>{{usulan[3]}}</td>
+            <td>{{usulan[4]}}</td>
+            <td>{{usulan[5]}}</td>
+            <td>
+                <a href="/SetujuRemisi/{{usulan[0]}}">
+                    SETUJU
+                </a>
+            </td>
+            <td>
+                <a href="/NotRemisi/{{usulan[0]}}">
+                    TIDAK
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>

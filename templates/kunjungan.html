@@ -1,0 +1,45 @@
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/custom.css')}}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css')}}">
+<img src="{{ url_for('static',filename='img/atas.png')}}"/>
+<style type="text/css">
+    h1{
+        margin-left: 12.5cm;
+    }
+    .isi{
+        display: grid;
+		text-align: center;
+		vertical-align: middle;
+		border:2px solid rgba(0,0,0,.2);
+        margin-left: 13cm;
+        width: 8cm;
+    }
+</style>
+<h1>Form Pengisian Kunjungan Napi</h1>
+
+<form method="post" action="/kunjungan">
+    <div class="isi">
+    <table>
+        <tr>
+            <td><label>Masukkan No ktp  </label></td>
+            <td><input type="text" name="no_ktp" required/></td>
+        </tr>
+        <tr>
+            <td><label>Masukkan nama  </label></td>
+            <td><input type="text" name="namaPengunjung" required/></td>
+        </tr>
+        <tr>
+            <td><label>Alamat Pengunjung  </label></td>
+            <td><input type="text" name="alamat" required/></td>
+        </tr>
+        <tr>
+            <td><label>No tahanan  </label></td>
+            <td><input type="number" name="NoTahanan" required/></td>
+        </tr>
+        <tr>
+            <td><label>Waktu kunjungan </label></td>
+            <td><input type="date" name="waktu" required/></td>
+        </tr>
+    </table>
+    <input type="submit"/>
+</div>
+</form>

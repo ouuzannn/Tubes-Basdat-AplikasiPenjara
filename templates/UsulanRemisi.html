@@ -1,0 +1,45 @@
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/custom.css')}}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css')}}">
+<img src="{{ url_for('static',filename='img/atas.png')}}"/>
+<style type="text/css">
+    h1{
+        margin-left: 14.5cm;
+    }
+    .isi{
+        display: grid;
+		text-align: center;
+		vertical-align: middle;
+		border:2px solid rgba(0,0,0,.2);
+        margin-left: 12cm;
+        width: 10cm;
+    }
+</style>
+<h1>Form Usulan Remisi</h1>
+
+<form method="post" action="/UsulanRemisi">
+    <div class="isi">
+    <table>
+        <tr>
+            <td><label>Nomor tahanan </label></td>
+            <td><input type="text" name="no_tahanan" required/></td>
+        </tr>
+        <tr>
+            <td><label>Alasan </label></td>
+            <td><input type="text" name="alasan" required/></td>
+        </tr>
+        <tr>
+            <td><label>Pengurangan Masa Tahanan </label></td>
+            <td><input type="text" name="pengurangan" required/></td>
+        </tr>
+        <tr>
+            <td><label>Tahun Masuk </label></td>
+            <td><input type="text" name="tmasuk" required/></td>
+        </tr>
+        <tr>
+            <td><label>Tahun Keluar </label></td>
+            <td><input type="text" name="tkeluar" required/></td>
+        </tr>
+    </table>
+    <input type="submit"/>
+</div>
+</form>

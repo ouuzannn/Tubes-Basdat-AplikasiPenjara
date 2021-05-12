@@ -1,0 +1,33 @@
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/custom.css')}}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css')}}">
+<img src="{{ url_for('static',filename='img/atas.png')}}"/>
+<style type="text/css">
+    h1{
+        margin-left: 16cm;
+    }
+    .data{
+        margin-left: 12.5cm;
+    }
+</style>
+<h1>INFO TAHANAN</h1>
+<div class="data">
+<table border="4">
+    <thead>
+        <tr>
+            <th>Nomor Tahanan</th>
+            <th>Nama Tahanan</th>
+            <th>Nomor Ruangan</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for kolom in infotahanan %}
+    <tr>
+        <td>{{kolom[0]}}</td>
+        <td>{{kolom[1]}}</td>
+        <td>{{kolom[2]}}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+</div>
+<a href="/OpsiPengunjung">Kembali Halaman Utama</a>

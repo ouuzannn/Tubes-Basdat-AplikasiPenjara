@@ -1,0 +1,33 @@
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/custom.css')}}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css')}}">
+<img src="{{ url_for('static',filename='img/atas.png')}}"/>
+<style type="text/css">
+    h1{
+        display: grid;
+		text-align: center;
+		vertical-align: middle;
+		border:2px solid rgba(0,0,0,.2);
+        margin-left: 13cm;
+        width: 7cm;
+    }
+    h2{
+        display: grid;
+		text-align: center;
+		vertical-align: middle;
+		border:2px solid rgba(0,0,0,.2);
+        margin-left: 13cm;
+        width: 7cm;
+    }
+</style>
+<h1>DIAGRAM</h1>
+<h2>
+<form method="POST" action="/diagram">
+    <a href="/column">Diagram Batang</a>
+    <br>
+    <a href="/line">Diagram Garis</a>
+    <br>
+    <a href="/pie">Diagram Pie</a>
+    <br>
+    <a href="/donat">Diagram Donat</a>
+</form>
+</h2>
