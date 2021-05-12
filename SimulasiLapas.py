@@ -68,17 +68,14 @@ def PegawaiBaru() :
                 nama_pegawai = request.form["nama_pegawai"]
                 nama_lapas = request.form["nama_lapas"]
 
-                try :
-                        cur = mysql.connection.cursor()
-                        cur.execute("INSERT INTO pegawai (ID_pegawai,nama_pegawai,nama_lapas) VALUES (%s,%s,%s)",(ID_pegawai,nama_pegawai,nama_lapas))
+                cur = mysql.connection.cursor()
+                cur.execute("INSERT INTO pegawai (ID_pegawai,nama_pegawai,nama_lapas) VALUES (%s,%s,%s)",(ID_pegawai,nama_pegawai,nama_lapas))
 
-                        mysql.connection.commit()
+                mysql.connection.commit()
 
-                        cur.close()
+                cur.close()
 
-                        return render_template("PegawaiBerhasil.html")
-                except :
-                        return redirect('/PegawaiBaru')
+                return render_template("menu.html")
         return render_template('pegawai.html')
 
 #Input napi (tahanan baru)
@@ -101,9 +98,9 @@ def napi() :
 
                         cur.close()
                 except :
-                        return redirect('/napi')
+                        return redirect('napi')
 
-                return render_template('NapiMasuk.html')
+                return render_template("menu.html")
         return render_template('napi.html')
 
 #Untuk meilhat list kunjungan
@@ -149,13 +146,13 @@ def KonfirmasiHapusTahanan(id) :
 def UsulanRemisi() :
         
         if request.method == 'POST' :
-                
-                no_tahanan = request.form['no_tahanan']
-                pengurangan = request.form["pengurangan"]
-                tmasuk = request.form["tmasuk"]
-                tkeluar = request.form["tkeluar"]
-                alasan = request.form["alasan"]
                 try :
+                        no_tahanan = request.form['no_tahanan']
+                        pengurangan = request.form["pengurangan"]
+                        tmasuk = request.form["tmasuk"]
+                        tkeluar = request.form["tkeluar"]
+                        alasan = request.form["alasan"]
+
                         cur = mysql.connection.cursor()
                         cur.execute(f'INSERT INTO usulanremisi VALUES("{no_tahanan}","{pengurangan}","{tmasuk}","{tkeluar}","{alasan}")')
 
@@ -183,41 +180,38 @@ def TampilTahanan():
                 cur = mysql.connection.cursor()
                 cur.execute(f"SELECT no_tahanan,nama_tahanan,no_ruangan FROM napi where napi.no_tahanan='{idnapi}' AND no_ruangan IN (select no_ruangan from ruang_lapas)")
                 infotahanan = cur.fetchall()
-                try :
-                        return render_template('InfoTahanan.html',infotahanan=infotahanan)
-                except :
-                        return redirect('TampilTahanan')
+                return render_template('InfoTahanan.html',infotahanan=infotahanan)
         return render_template('CariInfoTahanan.html')
 
 @app.route('/TampilUsulanRemisi')
 def NotifUsulanRemisi():
         cur =  mysql.connection.cursor()
-        cur.execute(f'SELECT no_tahanan,nama_tahanan,Pengurangan_Masa,Tahun_Masuk,Tahun_Keluar,alasan FROM usulanremisi NATURAL JOIN napi;')
+        cur.execute(f'SELECT * from usulanremisi')
         InfoRemisi = cur.fetchall()
         return render_template('TampilRemisi.html',InfoRemisi=InfoRemisi)
 
 
-@app.route('/SetujuRemisi/<id>/<idmasapengurangan>')
-def SetujuRemisi(id,idmasapengurangan):
+@app.route('/SetujuRemisi/<int:id>')
+def SetujuRemisi(id):
         cur = mysql.connection.cursor()
         cur.execute(f'DELETE FROM usulanremisi WHERE usulanremisi.no_tahanan="{id}"')
-        cur.execute(f'UPDATE napi SET napi.tahun_keluar=(select tahun_keluar FROM napi WHERE napi.no_tahanan="{id}")-{idmasapengurangan} WHERE napi.no_tahanan="{id}"')
+        cur.execute(f'UPDATE napi SET napi.tahun_keluar=(select tahun_keluar FROM napi WHERE napi.no_tahanan="{id}")-2 WHERE naPI.no_tahanan="{id}"')
         mysql.connection.commit()
 
         cur.close()
 
         return redirect('/TampilUsulanRemisi')
 
-@app.route('/NotRemisi/<id>',methods=['GET','POST'])
+@app.route('/NotRemisi/<int:id>',methods=['GET','POST'])
 def NotRemisi(id):
         
         cur = mysql.connection.cursor()
-        cur.execute(f'DELETE FROM usulanremisi WHERE usulanremisi.no_tahanan="{id}"')
+        cur.execute(f'DELETE FROM usulanremisi WHERE usulanremisi.no_tahanan={id}')
         mysql.connection.commit()
 
         cur.close()
 
-        return redirect('/TampilUsulanRemisi')
+        return render_template('TampilRemisi.html')
 
 @app.route('/diagram')
 def diagram():
