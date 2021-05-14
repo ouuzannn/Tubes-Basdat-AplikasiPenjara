@@ -7,11 +7,11 @@ app = Flask(__name__)
 app.config['MYSQL_HOST'] = "localhost"
 app.config['MYSQL_USER'] = "root"
 app.config['MYSQL_PASSWORD'] = ""
-# #DB dari DODO
-app.config['MYSQL_DB'] = "penjara"
+# # #DB dari DODO
+# app.config['MYSQL_DB'] = "penjara"
 
 #DB dari ozan
-# app.config['MYSQL_DB'] = "penjaralapasrev2"
+app.config['MYSQL_DB'] = "penjaralapasrevfinal"
 
 mysql = MySQL(app) 
 
@@ -24,9 +24,9 @@ def login() :
                 username = request.form['username']
                 password = request.form["password"]
 
-                if (username=="Kepala Lapas" and password=="Kepala_Lapas"):
+                if (username=="Kepala Lapas" and password=="Kepala_Lapas"): #DONE
                         return redirect('/OpsiKP') #Masuk dulu dia mau input pegawai baru apa hapus tahanan
-                elif (username=="Pegawai" and password=="Pegawai"):
+                elif (username=="Pegawai" and password=="Pegawai"):#DONE
                         return redirect('/OpsiPegawai')
                 elif (username=="Pengunjung" and password=="Pengunjung"):
                         return redirect('/OpsiPengunjung')
@@ -57,7 +57,7 @@ def kunjungan() :
 
                 cur.close()
 
-                return render_template("menu.html")
+                return render_template("PengunjungBerhasil.html")
         return render_template('kunjungan.html')
 
 #input pegawai baru 
@@ -75,7 +75,7 @@ def PegawaiBaru() :
 
                 cur.close()
 
-                return render_template("menu.html")
+                return render_template("PegawaiBerhasil.html")
         return render_template('pegawai.html')
 
 #Input napi (tahanan baru)
@@ -100,7 +100,7 @@ def napi() :
                 except :
                         return redirect('napi')
 
-                return render_template("menu.html")
+                return render_template("NapiBerhasil.html")
         return render_template('napi.html')
 
 #Untuk meilhat list kunjungan
@@ -108,11 +108,12 @@ def napi() :
 def daftarpengunjung():
         cur = mysql.connection.cursor()
         cur.execute('''SELECT no_ktp, nama_pengunjung, alamat_pengunjung, no_tahanan, waktu, no_ruangan, kelas FROM kunjungan NATURAL JOIN pengunjung NATURAL JOIN ruang_lapas''')
+        #cur.execute(f'SELECT no_ktp,nama_pengunjung,alamat_pengunjung,no_tahanan,waktu,no_ruangan,kelas FROM kunjungan INNER JOIN pengunjung WHERE pengunjung.no_ktp=kunjungan.no_ktp INNER JOIN ruang_lapas where ruang_lapas.no_ruangan=pengunjung.no_tahanan IN (SELECT no_ruangan FROM napi WHERE napi.no_ruangan=kunjungan)')
         rv = cur.fetchall()
         return render_template("daftarpengunjung.html",value=rv)
 
 @app.route('/OpsiKP',methods=['GET','POST'])
-def OpsiKP():
+def OpsiKP():#DONE
         try : 
                 if username == 'Kepala Lapas' :
                         return render_template("OpsiKP.html")
@@ -132,8 +133,6 @@ def HapusTahanan():
 
 @app.route('/KerjaHapus/<int:id>',methods=['GET','POST'])
 def KonfirmasiHapusTahanan(id) :
-        # if method.request=='POST' :
-        #         return redirect('OpsiKP')
         cur=mysql.connection.cursor()
         cur.execute(f"DELETE FROM napi WHERE napi.no_tahanan={id}")
         cur.execute(f"DELETE FROM kunjungan WHERE kunjungan.no_tahanan={id}")
@@ -146,20 +145,21 @@ def KonfirmasiHapusTahanan(id) :
 def UsulanRemisi() :
         
         if request.method == 'POST' :
+                
+                no_tahanan = request.form['no_tahanan']
+                pengurangan = request.form["pengurangan"]
+                tmasuk = request.form["tmasuk"]
+                tkeluar = request.form["tkeluar"]
+                alasan = request.form["alasan"]
                 try :
-                        no_tahanan = request.form['no_tahanan']
-                        pengurangan = request.form["pengurangan"]
-                        tmasuk = request.form["tmasuk"]
-                        tkeluar = request.form["tkeluar"]
-                        alasan = request.form["alasan"]
-
                         cur = mysql.connection.cursor()
                         cur.execute(f'INSERT INTO usulanremisi VALUES("{no_tahanan}","{pengurangan}","{tmasuk}","{tkeluar}","{alasan}")')
 
                         mysql.connection.commit()
 
                         cur.close()
-
+                        
+                        
                         return redirect("/OpsiPegawai")
                 except :
                         return render_template('UsulanRemisi.html')
@@ -186,16 +186,16 @@ def TampilTahanan():
 @app.route('/TampilUsulanRemisi')
 def NotifUsulanRemisi():
         cur =  mysql.connection.cursor()
-        cur.execute(f'SELECT * from usulanremisi')
+        cur.execute(f'SELECT no_tahanan,nama_tahanan,Pengurangan_Masa,Tahun_masuk,Tahun_Keluar,alasan from usulanremisi natural join napi')
         InfoRemisi = cur.fetchall()
         return render_template('TampilRemisi.html',InfoRemisi=InfoRemisi)
 
 
-@app.route('/SetujuRemisi/<int:id>')
-def SetujuRemisi(id):
+@app.route('/SetujuRemisi/<id>/<idhapus>')
+def SetujuRemisi(id,idhapus):
         cur = mysql.connection.cursor()
         cur.execute(f'DELETE FROM usulanremisi WHERE usulanremisi.no_tahanan="{id}"')
-        cur.execute(f'UPDATE napi SET napi.tahun_keluar=(select tahun_keluar FROM napi WHERE napi.no_tahanan="{id}")-2 WHERE naPI.no_tahanan="{id}"')
+        cur.execute(f'UPDATE napi SET napi.tahun_keluar=(select tahun_keluar FROM napi WHERE napi.no_tahanan="{id}")-{idhapus} WHERE napi.no_tahanan="{id}"')
         mysql.connection.commit()
 
         cur.close()
@@ -211,7 +211,7 @@ def NotRemisi(id):
 
         cur.close()
 
-        return render_template('TampilRemisi.html')
+        return redirect('/TampilUsulanRemisi')
 
 @app.route('/diagram')
 def diagram():
