@@ -50,8 +50,8 @@ def kunjungan() :
                 waktu = request.form["waktu"]
 
                 cur = mysql.connection.cursor()
-                cur.execute("INSERT INTO pengunjung (no_ktp,nama_pengunjung,alamat_pengunjung,no_tahanan,waktu) VALUES (%s,%s,%s,%s.%s)",(no_ktp,NamaPengunjung,alamat,NoTahanan,waktu))
-                cur.execute("INSERT INTO kunjungan (no_ktp,no_tahanan,waktu) VALUES (%s,%s,%s)",(no_ktp,NoTahanan,waktu))
+                cur.execute("INSERT INTO pengunjung (no_ktp,nama_pengunjung,alamat_pengunjung,no_tahanan) VALUES (%s,%s,%s,%s)",(no_ktp,NamaPengunjung,alamat,NoTahanan))
+                cur.execute("INSERT INTO kunjungan (no_ktp,nama_pengunjung,no_tahanan,waktu) VALUES (%s,%s,%s,%s)",(no_ktp,NamaPengunjung,NoTahanan,waktu))
 
                 mysql.connection.commit()
 
@@ -107,7 +107,7 @@ def napi() :
 @app.route('/daftar_pengunjung')
 def daftarpengunjung():
         cur = mysql.connection.cursor()
-        cur.execute('''SELECT no_ktp, nama_pengunjung, alamat_pengunjung, no_tahanan, waktu, no_ruangan, kelas FROM kunjungan NATURAL JOIN pengunjung NATURAL JOIN ruang_lapas''')
+        cur.execute(f'SELECT pengunjung.no_ktp,pengunjung.nama_pengunjung,napi.no_tahanan,kunjungan.waktu,napi.no_ruangan FROM pengunjung INNER JOIN kunjungan ON kunjungan.no_ktp=pengunjung.no_ktp INNER JOIN napi ON napi.no_tahanan=pengunjung.no_tahanan') #3 TABEL
         #cur.execute(f'SELECT no_ktp,nama_pengunjung,alamat_pengunjung,no_tahanan,waktu,no_ruangan,kelas FROM kunjungan INNER JOIN pengunjung WHERE pengunjung.no_ktp=kunjungan.no_ktp INNER JOIN ruang_lapas where ruang_lapas.no_ruangan=pengunjung.no_tahanan IN (SELECT no_ruangan FROM napi WHERE napi.no_ruangan=kunjungan)')
         rv = cur.fetchall()
         return render_template("daftarpengunjung.html",value=rv)
@@ -126,7 +126,7 @@ def HapusTahanan():
         if request.method== 'POST':
                 IdNapi = request.form['id_napi']
                 cur=mysql.connection.cursor()
-                cur.execute(f"SELECT no_tahanan,nama_tahanan,lama_penahanan,kasus,no_ruangan,nama_lapas FROM napi NATURAL JOIN cabang_lapas where napi.no_tahanan='{IdNapi}'")
+                cur.execute(f"SELECT no_tahanan,nama_tahanan,lama_penahanan,kasus,no_ruangan,nama_lapas FROM napi NATURAL JOIN cabang_lapas where napi.no_tahanan='{IdNapi}'") #2 TABEL
                 identitas_napi = cur.fetchall()
                 return render_template('KonfirmasiHapus.html',identitas=identitas_napi,idnapi=IdNapi)
         return render_template("HapusTahanan.html")
