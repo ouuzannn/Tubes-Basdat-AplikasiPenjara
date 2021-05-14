@@ -50,7 +50,7 @@ def kunjungan() :
                 waktu = request.form["waktu"]
 
                 cur = mysql.connection.cursor()
-                cur.execute("INSERT INTO pengunjung (no_ktp,nama_pengunjung,alamat_pengunjung,no_tahanan) VALUES (%s,%s,%s,%s)",(no_ktp,NamaPengunjung,alamat,NoTahanan))
+                cur.execute("INSERT INTO pengunjung (no_ktp,nama_pengunjung,alamat_pengunjung,no_tahanan,waktu) VALUES (%s,%s,%s,%s.%s)",(no_ktp,NamaPengunjung,alamat,NoTahanan,waktu))
                 cur.execute("INSERT INTO kunjungan (no_ktp,no_tahanan,waktu) VALUES (%s,%s,%s)",(no_ktp,NoTahanan,waktu))
 
                 mysql.connection.commit()
