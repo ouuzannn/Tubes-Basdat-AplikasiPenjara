@@ -30,15 +30,15 @@
 
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Nomor Ruangan', 'Kapasitas'],
-          ['Ruang 1',  a ],
-          ['Ruang 2', b ],
-          ['Ruang 3', c ],
-          ['Ruang 4', d ]
+          ['Nomor Ruangan', 'Kapasitas Tahanan'],
+          ['A001',  a ],
+          ['B001', b ],
+          ['C001', c ],
+          ['C002', d ]
         ]);
 
         var options = {
-          title: 'Ruang Tahanan',
+          title: 'Kapasitas Ruang Tahanan',
           curveType: 'function',
           legend: { position: 'bottom' }
         };

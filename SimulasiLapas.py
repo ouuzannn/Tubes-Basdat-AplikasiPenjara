@@ -11,7 +11,7 @@ app.config['MYSQL_PASSWORD'] = ""
 # app.config['MYSQL_DB'] = "penjara"
 
 #DB dari ozan
-app.config['MYSQL_DB'] = "penjaralapasrevfinal"
+app.config['MYSQL_DB'] = "penjara"
 
 mysql = MySQL(app) 
 
@@ -186,7 +186,7 @@ def TampilTahanan():
 @app.route('/TampilUsulanRemisi')
 def NotifUsulanRemisi():
         cur =  mysql.connection.cursor()
-        cur.execute(f'SELECT no_tahanan,nama_tahanan,Pengurangan_Masa,Tahun_masuk,Tahun_Keluar,alasan from usulanremisi natural join napi')
+        cur.execute(f'SELECT napi.no_tahanan,nama_tahanan,Pengurangan_Masa,usulanremisi.Tahun_masuk,usulanremisi.Tahun_Keluar,alasan from usulanremisi inner join napi on usulanremisi.no_tahanan = napi.no_tahanan')
         InfoRemisi = cur.fetchall()
         return render_template('TampilRemisi.html',InfoRemisi=InfoRemisi)
 

@@ -27,11 +27,11 @@
     google.charts.setOnLoadCallback(drawChart);
     function drawChart() {
       var data = google.visualization.arrayToDataTable([
-        ['Nomor Ruangan', 'Kapasitas', { role: "style" }],
-        ['Ruang 1',  a, "red" ],
-        ['Ruang 2', b, "blue" ],
-        ['Ruang 3', c, "green" ],
-        ['Ruang 4', d, "yellow" ]
+        ['Nomor Ruangan', 'Kapasitas Tahanan', { role: "style" }],
+        ['A001',  a, "red" ],
+        ['B001', b, "blue" ],
+        ['C001', c, "green" ],
+        ['C002', d, "yellow" ]
       ]);
 
       var view = new google.visualization.DataView(data);
@@ -43,7 +43,7 @@
                        2]);
 
       var options = {
-        title: "Ruang Tahanan , dalam orang",
+        title: "Kapasitas Ruang Tahanan",
         width: 600,
         height: 400,
         bar: {groupWidth: "95%"},
