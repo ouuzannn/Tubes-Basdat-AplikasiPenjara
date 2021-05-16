@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2021 at 01:51 AM
+-- Generation Time: May 16, 2021 at 06:14 AM
 -- Server version: 10.4.18-MariaDB
 -- PHP Version: 8.0.3
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `penjara`
+-- Database: `penjaralapasrevfinal(2)`
 --
 
 -- --------------------------------------------------------
@@ -59,7 +59,9 @@ CREATE TABLE `kunjungan` (
 --
 
 INSERT INTO `kunjungan` (`no_ktp`, `nama_pengunjung`, `no_tahanan`, `waktu`) VALUES
-('123456789009', 'Adji', '31001', '2021-05-12');
+('123456789009', 'Adji', '31001', '2021-05-12'),
+('123764510', 'Ari', '21002', '2021-05-17'),
+('10235493', 'Arman', '21001', '2021-05-17');
 
 -- --------------------------------------------------------
 
@@ -86,40 +88,6 @@ INSERT INTO `napi` (`no_tahanan`, `nama_tahanan`, `lama_penahanan`, `kasus`, `ta
 ('21001', 'Ika Agus', 5, 'Pembegalan', '2018', '2023', 'B001'),
 ('21002', 'Rizpo', 4, 'Penipuan', '2019', '2023', 'B001'),
 ('31001', 'Wahyu Putra', 2, 'Pencurian', '2021', '2022', 'C001');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `no_hp_pegawai`
---
-
-CREATE TABLE `no_hp_pegawai` (
-  `ID_pegawai` char(5) DEFAULT NULL,
-  `no_hp` char(12) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `no_hp_pegawai`
---
-
-INSERT INTO `no_hp_pegawai` (`ID_pegawai`, `no_hp`) VALUES
-('PK001', '089912345678'),
-('PK002', '089956743210'),
-('PS001', '084567832415'),
-('PS002', '085587501243'),
-('PS003', '089900754307'),
-('PS004', '084532154637');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `no_hp_pengunjung`
---
-
-CREATE TABLE `no_hp_pengunjung` (
-  `no_ktp` char(12) DEFAULT NULL,
-  `no_hp` char(12) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -156,18 +124,17 @@ CREATE TABLE `pengunjung` (
   `no_ktp` char(12) NOT NULL,
   `nama_pengunjung` varchar(50) NOT NULL,
   `alamat_pengunjung` varchar(20) NOT NULL,
-  `no_tahanan` char(5) NOT NULL,
-  `waktu` date DEFAULT NULL
+  `no_tahanan` char(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `pengunjung`
 --
 
-INSERT INTO `pengunjung` (`no_ktp`, `nama_pengunjung`, `alamat_pengunjung`, `no_tahanan`, `waktu`) VALUES
-('123456789009', 'Adji', 'Ketapang', '31001', NULL),
-('137112021001', 'Diah Agustina', 'Bandar Lampung', 'KA001', '2015-03-21'),
-('137112021002', 'Desi', 'Lampung Selatan', 'KB001', '2017-04-21');
+INSERT INTO `pengunjung` (`no_ktp`, `nama_pengunjung`, `alamat_pengunjung`, `no_tahanan`) VALUES
+('10235493', 'Arman', 'Jl.Intan 1', '21001'),
+('123456789009', 'Adji', 'Ketapang', '31001'),
+('123764510', 'Ari', 'Jl. Jati Agung', '21002');
 
 -- --------------------------------------------------------
 
@@ -270,20 +237,6 @@ ALTER TABLE `napi`
   ADD KEY `no_ruangan` (`no_ruangan`);
 
 --
--- Indexes for table `no_hp_pegawai`
---
-ALTER TABLE `no_hp_pegawai`
-  ADD PRIMARY KEY (`no_hp`),
-  ADD KEY `ID_pegawai` (`ID_pegawai`);
-
---
--- Indexes for table `no_hp_pengunjung`
---
-ALTER TABLE `no_hp_pengunjung`
-  ADD PRIMARY KEY (`no_hp`),
-  ADD KEY `no_ktp` (`no_ktp`);
-
---
 -- Indexes for table `pegawai`
 --
 ALTER TABLE `pegawai`
@@ -326,18 +279,6 @@ ALTER TABLE `usulanremisi`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `no_hp_pegawai`
---
-ALTER TABLE `no_hp_pegawai`
-  ADD CONSTRAINT `no_hp_pegawai_ibfk_1` FOREIGN KEY (`ID_pegawai`) REFERENCES `pegawai` (`ID_pegawai`) ON DELETE CASCADE;
-
---
--- Constraints for table `no_hp_pengunjung`
---
-ALTER TABLE `no_hp_pengunjung`
-  ADD CONSTRAINT `no_hp_pengunjung_ibfk_1` FOREIGN KEY (`no_ktp`) REFERENCES `pengunjung` (`no_ktp`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `usulanremisi`

@@ -11,7 +11,7 @@ app.config['MYSQL_PASSWORD'] = ""
 # app.config['MYSQL_DB'] = "penjara"
 
 #DB dari ozan
-app.config['MYSQL_DB'] = "penjara"
+app.config['MYSQL_DB'] = "penjaralapasrevfinal(2)"
 
 mysql = MySQL(app) 
 
